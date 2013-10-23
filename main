@@ -1,0 +1,27 @@
+
+Listen 80
+NameVirtualHost *:80
+
+<VirtualHost *:80>
+    ServerName exsul.net
+    ServerAlias www.exsul.net
+    DocumentRoot /var/www/vhosts/exsul.net/http
+    ErrorLog /var/www/vhosts/exsul.net/error.log
+</VirtualHost>
+
+
+<VirtualHost *:80>
+    ServerName btc-real.com
+    ServerAlias www.btc-real.com
+    DocumentRoot /var/www/vhosts/btc-real.com/http
+    ErrorLog /var/www/vhosts/btc-real.com/error.log
+</VirtualHost>
+<VirtualHost *:80>
+  DocumentRoot /var/www/dav/lol/
+  <Directory /var/www/dav/lol>
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all
+  </Directory>
+</VirtualHost>

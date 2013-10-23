@@ -1,0 +1,75 @@
+<?php
+$base_port = 80;
+echo "
+Listen $base_port
+NameVirtualHost *:$base_port";
+
+function dodir( $dir )
+{
+  if (!is_dir($dir))
+    mkdir($dir);
+}
+
+function prepare( $name )
+{
+  dodir("/var/www/vhosts/");
+  dodir("/var/www/vhosts/$name");
+  dodir("/var/www/vhosts/$name/http");
+//  touch("/var/www/vhosts/$name/error.log");
+}
+
+function Listen( $port )
+{
+  global $listen;
+  if (isset($listen[$port]))
+    return;
+  echo "Listen $port";
+  $listen[$port] = 1;
+}
+
+function gen( $name, $port, $noalias = false )
+{
+  prepare($name);
+  $addr = '*';
+/*  if ($port == 80)
+  {
+    $addr = '127.0.0.1';
+    $port = 8080;
+  }
+*/
+  echo "\n";
+  Listen($port);
+  if ($noalias)
+  echo "
+<VirtualHost *:$port>
+    DocumentRoot /var/www/vhosts/$name/http
+    ErrorLog /var/www/vhosts/$name/error.log
+</VirtualHost>
+";
+  else
+  echo "
+<VirtualHost *:$port>
+    ServerName $name
+    ServerAlias www.$name
+    DocumentRoot /var/www/vhosts/$name/http
+    ErrorLog /var/www/vhosts/$name/error.log
+</VirtualHost>
+";
+}
+
+$listen = array($base_port => 1);
+
+gen("exsul.net", $base_port);
+gen("btc-real.com", $base_port);
+
+echo <<<END
+<VirtualHost *:$base_port>
+  DocumentRoot /var/www/dav/lol/
+  <Directory /var/www/dav/lol>
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all
+  </Directory>
+</VirtualHost>
+END;

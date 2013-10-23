@@ -1,0 +1,4 @@
+<DirectoryMatch .*\.(svn|git|hg|bzr|cvs)/.*>
+  Deny From All
+</DirectoryMatch>
+
